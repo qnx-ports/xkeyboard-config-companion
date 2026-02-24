@@ -1,0 +1,35 @@
+pkgname=xkeyboard-config
+pkgver=2.44
+pkgrel=0
+pkgdesc="X keyboard configuration files"
+url="https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config"
+arch="noarch"
+license="MIT"
+subpackages="$pkgname-dev $pkgname-doc"
+depends_dev="$pkgname"
+makedepends="meson ninja pkgconf pkgconf-dev perl libexpat libxslt"
+source="https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/archive/xkeyboard-config-$pkgver/xkeyboard-config-xkeyboard-config-$pkgver.tar.gz
+        0001-Add-HIDUT-keycode-support-for-QNX.patch
+        0002-update-hidut-keycodes.patch
+        "
+builddir="$srcdir"/xkeyboard-config-xkeyboard-config-$pkgver
+
+build() {
+        meson setup output -Dprefix=/usr
+        meson compile -C output
+}
+
+check() {
+        meson test --print-errorlogs -C output
+}
+
+package() {
+        DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+
+sha512sums="
+bfd908d4bf589c743d56fd1717680d5008423508dbf2736be1e5536662a72e741494eae62db6ac08cb3486463532e5f2de2bda803c1cd05b7706353575e9e145  xkeyboard-config-xkeyboard-config-2.44.tar.gz
+fa9ff79f65fcddc5ca92d9d26fbeb5667566671d8c4c4bc8c6ede4d30b1d46c7fa12c62d45e89f1ee74857cef4ebdbbd79f549e5fdea53d3b684f5c744f847a8  0001-Add-HIDUT-keycode-support-for-QNX.patch
+6eb1f6cebd7d4e2d9a4bf2652ad50222e9e355d13bc83adc4e74f38d03478d0fd17dc7138c07820abe3201ff69530374a41162cf062152d49191b3bfc7fb2ee8  0002-update-hidut-keycodes.patch
+"
